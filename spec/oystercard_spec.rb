@@ -2,6 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
   let(:max_balance) { Oystercard::MAX_BALANCE }
+  let(:station){ double :station }
 
   it 'has initial balance' do
     expect(subject.balance).to eq(0)
@@ -25,26 +26,44 @@ describe Oystercard do
   end
 
   describe '#deducted' do
-      it { is_expected.to respond_to(:deducted).with(1).argument }
 
     it 'is expected to reduce balance by amount given' do
       subject.top_up(20)
-      expect(subject.deducted(10)).to eq(10)
+      subject.touch_out
+      expect(subject.balance).to eq(19)
     end
 
   describe '#in_journey' do
     it 'is expected to not be in journey' do
-      expect(subject.in_journey).to eq false
+      expect(subject.in_journey?).to eq false
+    end
+
+    it 'stores the entry station' do
+      journey = Oystercard.new
+      journey.top_up(22)
+      journey.touch_in(station)
+      expect(journey.entry_station).to eq station
     end
 
     it 'can touch in' do
-      status = subject.touch_in
-      expect(status).to eq true
+      oyster = Oystercard.new
+      oyster.top_up(20)
+      oyster.touch_in(station)
+      expect(oyster.in_journey?).to eq true
   end
 
   it 'can touch out' do
     subject.touch_out
-    expect(subject.in_journey).to eq false
+    expect(subject.in_journey?).to eq false
+  end
+
+  it 'raises error if insufficient funds' do
+    expect{ subject.touch_in(station) }.to raise_error('insufficient funds')
+  end
+
+  it 'deducts minimum balance when touched out' do
+    subject.top_up(10)
+    expect {subject.touch_out}.to change{subject.balance}.by(-Oystercard::MIN_CHARGE)
   end
 end
 end
