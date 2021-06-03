@@ -2,6 +2,16 @@
 
 Week 2 at [Makers](https://makers.tech/) pair programming challenge.
 
+## Technical Skills
+
+- Building on from the Boris Bikes challange in week 1.
+- TDD
+- Domain Modelling
+- OO Relationships
+- Single Responsibility Principle
+- Encapsulation
+- Isolating tests with doubles
+
 ## User Story
 
 ```
@@ -52,4 +62,21 @@ I need a penalty charge deducted if I fail to touch in or out
 In order to be charged the correct amount
 As a customer
 I need to have the correct fare calculated
+```
+
+## How to use
+
+```
+git clone https://github.com/frank-mck/oystercard.git
+
+```
+Run feature tests
+```
+irb
+require './lib/oystercard'
+```
+Run rspec tests
+```
+gem install rspec
+rspec
 ```
