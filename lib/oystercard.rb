@@ -13,20 +13,19 @@ class Oystercard
   def top_up(amount)
     @amount = amount
     fail "top up of #{@amount} exceeds max limit of #{MAX_BALANCE}" if exceeded?
-    @balance += amount
+    @balance += @amount
   end
 
   def touch_in(station)
     raise 'insufficient funds' if @balance < MIN_CHARGE
-    @station = station
     @entry_station = station
-    @list_of_journeys.push({@station => ' '})
+    @list_of_journeys.push({@entry_station => ''})
   end
 
   def touch_out(station)
     deduct(MIN_CHARGE)
     @exit_station = station
-    @list_of_journeys[0][@station] = @exit_station
+    @list_of_journeys[0][@entry_station] = @exit_station
     @entry_station = nil
   end
 
