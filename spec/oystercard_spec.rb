@@ -2,7 +2,6 @@ require 'oystercard'
 
 describe Oystercard do
   let(:max_balance) { Oystercard::MAX_BALANCE }
-  let(:station){ double :station }
   let(:top_up_touch_in) { double(:top_up_touch_in); subject.top_up(10); subject.touch_in(entry_station)}
   let(:entry_station) { double :entry_station }
   let(:exit_station) { double :exit_station }
@@ -35,7 +34,6 @@ describe Oystercard do
   end
 end
 
-  context 'when touching out' do
     describe '#touch_out' do
       it 'can touch out' do
         top_up_touch_in
@@ -74,6 +72,5 @@ end
       subject.touch_out(exit_station)
       expect(subject.list_of_journeys).to eq([{entry_station => exit_station}])
     end
-end
 end
 end

@@ -33,6 +33,10 @@ class Oystercard
     !!entry_station
   end
 
+  def print_journeys
+    @list_of_journeys.each { |journey| p journey }
+  end
+
   private
 
   def deduct(amount)
