@@ -3,7 +3,9 @@ require 'oystercard'
 describe Oystercard do
   let(:max_balance) { Oystercard::MAX_BALANCE }
   let(:station){ double :station }
-  let(:top_up_touch_in) { double(:top_up_touch_in); subject.top_up(10); subject.touch_in(station)}
+  let(:top_up_touch_in) { double(:top_up_touch_in); subject.top_up(10); subject.touch_in(entry_station)}
+  let(:entry_station) { double :entry_station }
+  let(:exit_station) { double :exit_station }
 
   it 'has initial balance' do
     expect(subject.balance).to eq(0)
@@ -37,19 +39,19 @@ end
     describe '#touch_out' do
       it 'can touch out' do
         top_up_touch_in
-        subject.touch_out(station)
+        subject.touch_out(exit_station)
         expect(subject.in_journey?).to eq false
       end
 
     it 'is expected to reduce balance by amount given' do
       top_up_touch_in
-      subject.touch_out(station)
+      subject.touch_out(exit_station)
       expect(subject.balance).to eq(9)
     end
 
     it 'deducts minimum balance when touched out' do
       top_up_touch_in
-      expect {subject.touch_out(station)}.to change{subject.balance}.by(-Oystercard::MIN_CHARGE)
+      expect {subject.touch_out(exit_station)}.to change{subject.balance}.by(-Oystercard::MIN_CHARGE)
     end
   end
 
@@ -64,13 +66,13 @@ end
 
     it 'stores the entry station' do
       top_up_touch_in
-      expect(subject.entry_station).to eq station
+      expect(subject.entry_station).to eq entry_station
     end
 
     it 'checks that touching in and out creates one journey' do
       top_up_touch_in
-      subject.touch_out(station)
-      expect(subject.list_of_journeys).to eq ([{station => station}])
+      subject.touch_out(exit_station)
+      expect(subject.list_of_journeys).to eq([{entry_station => exit_station}])
     end
 end
 end
