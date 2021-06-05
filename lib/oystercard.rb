@@ -5,7 +5,6 @@ class Oystercard
   MIN_CHARGE = 1
 
   def initialize
-    @entry_station = nil
     @balance = 0
     @list_of_journeys = []
   end
@@ -18,26 +17,42 @@ class Oystercard
 
   def touch_in(station)
     raise 'insufficient funds' if @balance < MIN_CHARGE
-    @entry_station = station
-    @list_of_journeys.push({ @entry_station => 'on a train' })
+    record_entry_station(station)
   end
 
   def touch_out(station)
     deduct(MIN_CHARGE)
-    @exit_station = station
-    @list_of_journeys[0][@entry_station] = @exit_station
-    @entry_station = nil
+    record_exit_station(station)
+  end
+
+  def balance
+    @balance
+  end
+
+  def has_entry_station
+    return false if @list_of_journeys.empty?
+    !!print_journeys[-1][:entry_station]
   end
 
   def in_journey?
-    !!entry_station
+    return false if @list_of_journeys.empty?
+    !!@list_of_journeys[-1][:entry_station] unless !!@list_of_journeys[-1][:exit_station]
   end
 
   def print_journeys
     @list_of_journeys.each { |journey| p journey }
   end
 
-  private
+ private
+
+  def record_entry_station(station)
+    @list_of_journeys.push({ :entry_station => station })
+    return station
+  end
+
+  def record_exit_station(station)
+    @list_of_journeys[-1][:exit_station] = station
+  end
 
   def deduct(amount)
     @balance -= amount

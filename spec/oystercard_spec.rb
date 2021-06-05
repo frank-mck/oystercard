@@ -38,7 +38,7 @@ end
       it 'can touch out' do
         top_up_touch_in
         subject.touch_out(exit_station)
-        expect(subject.in_journey?).to eq false
+        expect(subject.in_journey?).to eq nil
       end
 
     it 'is expected to reduce balance by amount given' do
@@ -53,9 +53,9 @@ end
     end
   end
 
-  context '#in_journey' do
+  context 'in_journey' do
     it 'checks to see if list of journeys has an empty list by default' do
-      expect(subject.list_of_journeys).to eq []
+      expect(subject.print_journeys).to eq []
     end
 
     it 'is expected to not be in journey' do
@@ -64,13 +64,13 @@ end
 
     it 'stores the entry station' do
       top_up_touch_in
-      expect(subject.entry_station).to eq entry_station
+      expect(subject.has_entry_station).to eq true
     end
 
     it 'checks that touching in and out creates one journey' do
       top_up_touch_in
       subject.touch_out(exit_station)
-      expect(subject.list_of_journeys).to eq([{entry_station => exit_station}])
+      expect(subject.list_of_journeys).to eq([{:entry_station => entry_station, :exit_station => exit_station}])
     end
 end
 end
